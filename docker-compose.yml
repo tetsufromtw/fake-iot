@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  # MQTT Broker 
+  mqtt-broker:
+    image: eclipse-mosquitto:2
+    container_name: mqtt-broker
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    volumes:
+      - ./mosquitto/config:/mosquitto/config
+      - ./mosquitto/data:/mosquitto/data
+      - ./mosquitto/log:/mosquitto/log
+    command: mosquitto -c /mosquitto-no-auth.conf
+    networks:
+      - iot-network
+    restart: unless-stopped
+
+  # IoT Service
+  iot-service:
+    build:
+      context: ./iot-service
+      dockerfile: Dockerfile
+    container_name: iot-service
+    depends_on:
+      - mqtt-broker
+    environment:
+      - MQTT_BROKER=mqtt-broker
+      - MQTT_PORT=1883
+      - MQTT_TOPIC=/motor/status
+      - MQTT_CLIENT_ID=iot-service-01
+      - CSV_FILE=data.csv
+      - SEND_INTERVAL=1.0
+    volumes:
+      - ./iot-service/data.csv:/app/data.csv:ro
+    networks:
+      - iot-network
+    restart: unless-stopped
+
+  # MQTT Explorer (Web UI for debugging)
+  mqtt-explorer:
+    image: smeagolworms4/mqtt-explorer
+    container_name: mqtt-explorer
+    ports:
+      - "4000:4000"
+    environment:
+      - HTTP_PORT=4000
+    depends_on:
+      - mqtt-broker
+    networks:
+      - iot-network
+    restart: unless-stopped
+
+networks:
+  iot-network:
+    driver: bridge
