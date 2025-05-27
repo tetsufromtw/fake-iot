@@ -1,7 +1,6 @@
 version: '3.8'
 
 services:
-  # MQTT Broker 
   mqtt-broker:
     image: eclipse-mosquitto:2
     container_name: mqtt-broker
@@ -17,7 +16,6 @@ services:
       - iot-network
     restart: unless-stopped
 
-  # IoT Service
   iot-service:
     build:
       context: ./iot-service
@@ -38,7 +36,45 @@ services:
       - iot-network
     restart: unless-stopped
 
-  # MQTT Explorer (Web UI for debugging)
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: backend-service
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+    depends_on:
+      - mqtt-broker
+    environment:
+      - MQTT_BROKER=mqtt-broker
+      - MQTT_PORT=1883
+      - MQTT_TOPIC=/motor/status
+      - MQTT_CLIENT_ID=backend-service
+    networks:
+      - iot-network
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: frontend-service
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+      - /app/.next
+    depends_on:
+      - backend
+    environment:
+      - WATCHPACK_POLLING=true
+    networks:
+      - iot-network
+    restart: unless-stopped
+
   mqtt-explorer:
     image: smeagolworms4/mqtt-explorer
     container_name: mqtt-explorer

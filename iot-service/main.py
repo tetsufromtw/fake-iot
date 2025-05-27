@@ -116,10 +116,10 @@ def main():
                 qos=1
             )
             
-            if result.rc == mqtt.MQTT_ERR_SUCCESS:
-                logger.info(f"Sent: angle={payload['angle']}, rpm={payload['rpm']}")
-            else:
-                logger.error(f"Send failed, error code: {result.rc}")
+            # if result.rc == mqtt.MQTT_ERR_SUCCESS:
+            #     logger.info(f"Sent: angle={payload['angle']}, rpm={payload['rpm']}")
+            # else:
+            #     logger.error(f"Send failed, error code: {result.rc}")
             
             # Wait for specified interval
             time.sleep(SEND_INTERVAL)

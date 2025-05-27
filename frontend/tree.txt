@@ -1,0 +1,104 @@
+.
+├── README.md
+├── eslint.config.mjs
+├── next-env.d.ts
+├── next.config.ts
+├── package-lock.json
+├── package.json
+├── postcss.config.mjs
+├── public
+│   ├── file.svg
+│   ├── fonts
+│   ├── globe.svg
+│   ├── models
+│   │   ├── motor.fbx
+│   │   ├── scene.bin
+│   │   ├── scene.gltf
+│   │   └── textures
+│   │       ├── Scene_-_Root_baseColor.png
+│   │       ├── Scene_-_Root_baseColor.png:Zone.Identifier
+│   │       ├── Scene_-_Root_metallicRoughness.png
+│   │       └── Scene_-_Root_metallicRoughness.png:Zone.Identifier
+│   ├── next.svg
+│   ├── textures
+│   ├── vercel.svg
+│   └── window.svg
+├── src
+│   ├── app
+│   │   ├── (dashboard)
+│   │   │   ├── ControlPanel
+│   │   │   │   └── index.tsx
+│   │   │   ├── StatsPanel
+│   │   │   │   └── index.tsx
+│   │   │   ├── layout.tsx
+│   │   │   └── motor
+│   │   │       └── page.tsx
+│   │   ├── favicon.ico
+│   │   ├── globals.css
+│   │   ├── layout.tsx
+│   │   └── page.tsx
+│   ├── components
+│   │   ├── common
+│   │   │   ├── Footer
+│   │   │   ├── Header
+│   │   │   │   └── index.tsx
+│   │   │   └── LoadingSpinner
+│   │   │       └── index.tsx
+│   │   ├── dashboard
+│   │   │   ├── AngleIndicator
+│   │   │   ├── ConnectionStatus
+│   │   │   │   └── index.tsx
+│   │   │   ├── ControlPanel
+│   │   │   │   └── index.tsx
+│   │   │   ├── MotorStats
+│   │   │   ├── RPMGauge
+│   │   │   └── StatsPanel
+│   │   │       └── index.tsx
+│   │   ├── three
+│   │   │   ├── Controls
+│   │   │   ├── FBXMotor
+│   │   │   │   └── index.tsx
+│   │   │   ├── GridFloor
+│   │   │   │   └── index.tsx
+│   │   │   ├── Lighting
+│   │   │   │   └── index.tsx
+│   │   │   ├── Motor
+│   │   │   │   └── index.tsx
+│   │   │   ├── MotorScene
+│   │   │   │   └── index.tsx
+│   │   │   └── Scene
+│   │   └── ui
+│   │       └── Slider.tsx
+│   ├── config
+│   │   ├── environment.ts
+│   │   └── three.config.ts
+│   ├── constants
+│   │   ├── api.ts
+│   │   ├── motor.ts
+│   │   └── three.ts
+│   ├── hooks
+│   │   ├── useAnimationFrame.ts
+│   │   ├── useMotorData.ts
+│   │   └── useWebSocket.ts
+│   ├── lib
+│   │   ├── api
+│   │   │   ├── client.ts
+│   │   │   └── endpoints.ts
+│   │   ├── three
+│   │   │   ├── loaders.ts
+│   │   │   └── materials.ts
+│   │   └── utils
+│   │       ├── formatters.ts
+│   │       └── validators.ts
+│   ├── store
+│   │   ├── motorStore.ts
+│   │   ├── types.ts
+│   │   └── useFBXMotorStore.ts
+│   └── types
+│       ├── api.ts
+│       ├── motor.ts
+│       └── three.ts
+├── tree.txt
+└── tsconfig.json
+
+42 directories, 60 files
