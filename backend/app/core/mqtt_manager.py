@@ -1,11 +1,12 @@
 import json
 import asyncio
 import logging
+import time
 from datetime import datetime
 from typing import Optional
 
 import paho.mqtt.client as mqtt
-from app.models.motor import MotorStatus, MotorStats
+from app.models.motor import Motor1Status, Motor2Status, TemperatureStatus, MotorStats
 from app.core.config import get_settings
 
 logger = logging.getLogger(__name__)
@@ -13,7 +14,6 @@ settings = get_settings()
 
 
 class MQTTManager:
-    """MQTT Connection Manager"""
     
     def __init__(self):
         self.client = mqtt.Client(client_id=settings.mqtt_client_id)
@@ -22,54 +22,70 @@ class MQTTManager:
         self.client.on_message = self._on_message
         self.loop_task: Optional[asyncio.Task] = None
         
-        # Data storage
-        self.motor_status = MotorStatus()
+        self.motor1_status = Motor1Status()
+        self.motor2_status = Motor2Status()
+        self.temperature_status = TemperatureStatus()
         self.stats = MotorStats()
         
     def _on_connect(self, client, userdata, flags, rc):
-        """MQTT connect callback"""
         if rc == 0:
             logger.info(f"Connected to MQTT Broker: {settings.mqtt_broker}:{settings.mqtt_port}")
             self.stats.connection_status = "connected"
-            client.subscribe(settings.mqtt_topic)
-            logger.info(f"Subscribed to topic: {settings.mqtt_topic}")
+            
+            client.subscribe(settings.motor1_topic)
+            client.subscribe(settings.motor2_topic)
+            client.subscribe(settings.temp_topic)
+            
+            logger.info(f"Subscribed to topics: {settings.motor1_topic}, {settings.motor2_topic}, {settings.temp_topic}")
         else:
             logger.error(f"Connection failed, return code: {rc}")
             self.stats.connection_status = "failed"
     
     def _on_disconnect(self, client, userdata, rc):
-        """MQTT disconnect callback"""
         logger.warning(f"Disconnected from MQTT Broker, return code: {rc}")
         self.stats.connection_status = "disconnected"
     
     def _on_message(self, client, userdata, msg):
         try:
-            payload = json.loads(msg.payload.decode())
-            
-            self.motor_status.angle = payload.get("angle")
-            self.motor_status.rpm = payload.get("rpm")
-            self.motor_status.temperature = payload.get("temperature", 0)
-            self.motor_status.vibration = payload.get("vibration", 0)
-            self.motor_status.timestamp = payload.get("timestamp")
-            self.motor_status.last_update = datetime.now()
-            
-            self.stats.messages_received += 1
-            
-            # logger.info(
-            #     f"Received MQTT message - Angle: {payload.get('angle')}, "
-            #     f"RPM: {payload.get('rpm')}"
-            # )
+            topic = msg.topic
+            value = int(msg.payload.decode())
+            current_time = time.time()
             
             from app.core.socketio_manager import socketio_manager
-            asyncio.create_task(
-                socketio_manager.emit_motor_status(self.motor_status.dict())
-            )
+            
+            if topic == settings.motor1_topic:
+                self.motor1_status.position = value
+                self.motor1_status.timestamp = current_time
+                self.motor1_status.last_update = datetime.now()
+                
+                asyncio.create_task(
+                    socketio_manager.emit_motor1_status(self.motor1_status.dict())
+                )
+                
+            elif topic == settings.motor2_topic:
+                self.motor2_status.position = value
+                self.motor2_status.timestamp = current_time
+                self.motor2_status.last_update = datetime.now()
+                
+                asyncio.create_task(
+                    socketio_manager.emit_motor2_status(self.motor2_status.dict())
+                )
+                
+            elif topic == settings.temp_topic:
+                self.temperature_status.value = value
+                self.temperature_status.timestamp = current_time
+                self.temperature_status.last_update = datetime.now()
+                
+                asyncio.create_task(
+                    socketio_manager.emit_temperature_status(self.temperature_status.dict())
+                )
+            
+            self.stats.messages_received += 1
             
         except Exception as e:
             logger.error(f"Error processing message: {e}")
     
     async def connect_and_subscribe(self):
-        """Connect to MQTT Broker and start subscribing"""
         try:
             self.client.connect(settings.mqtt_broker, settings.mqtt_port, 60)
             self.loop_task = asyncio.create_task(self._mqtt_loop())
@@ -79,13 +95,11 @@ class MQTTManager:
             self.stats.connection_status = "error"
     
     async def _mqtt_loop(self):
-        """Non-blocking MQTT loop"""
         while True:
             self.client.loop(timeout=0.1)
-            await asyncio.sleep(0.1)
+            await asyncio.sleep(0.001)
     
     async def disconnect(self):
-        """Disconnect MQTT connection"""
         if self.loop_task:
             self.loop_task.cancel()
             try:

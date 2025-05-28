@@ -6,7 +6,9 @@ from pydantic_settings import BaseSettings
 class Settings(BaseSettings):
     mqtt_broker: str = "localhost"
     mqtt_port: int = 1883
-    mqtt_topic: str = "/motor/status"
+    motor1_topic: str = "motor/1/pos"
+    motor2_topic: str = "motor/2/pos"
+    temp_topic: str = "sensor/1/temp"
     mqtt_client_id: str = "backend-service"
     
     api_title: str = "IoT Backend Service"

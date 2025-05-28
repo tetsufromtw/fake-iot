@@ -5,7 +5,7 @@ export default function Header() {
   return (
     <header className="bg-gray-900 border-b border-gray-800">
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16">
+        <div className="grid grid-cols-3 items-center h-16">
           {/* Logo Area */}
           <Link href="/" className="flex items-center space-x-3">
             <div className="relative">
@@ -20,34 +20,18 @@ export default function Header() {
             </div>
           </Link>
           
-          {/* Navigation Area */}
-          <nav className="hidden md:flex items-center space-x-8">
+          {/* Navigation Area - Centered */}
+          <nav className="hidden md:flex items-center justify-center">
             <Link 
               href="/" 
               className="text-gray-300 hover:text-white transition-colors"
             >
               Dashboard
             </Link>
-            <Link 
-              href="/analytics" 
-              className="text-gray-300 hover:text-white transition-colors"
-            >
-              Analytics
-            </Link>
-            <Link 
-              href="/settings" 
-              className="text-gray-300 hover:text-white transition-colors"
-            >
-              Settings
-            </Link>
           </nav>
           
-          {/* Right Status */}
-          <div className="flex items-center space-x-4">
-            <div className="text-sm text-gray-400">
-              System Status: <span className="text-green-400">Online</span>
-            </div>
-          </div>
+          {/* Empty Right Column */}
+          <div></div>
         </div>
       </div>
     </header>

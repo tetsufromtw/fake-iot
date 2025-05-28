@@ -3,11 +3,20 @@ from typing import Optional
 from pydantic import BaseModel
 
 
-class MotorStatus(BaseModel):
-    angle: Optional[float] = None
-    rpm: Optional[float] = None
-    temperature: Optional[float] = None
-    vibration: Optional[float] = None
+class Motor1Status(BaseModel):
+    position: Optional[int] = None
+    timestamp: Optional[float] = None
+    last_update: Optional[datetime] = None
+
+
+class Motor2Status(BaseModel):
+    position: Optional[int] = None
+    timestamp: Optional[float] = None
+    last_update: Optional[datetime] = None
+
+
+class TemperatureStatus(BaseModel):
+    value: Optional[int] = None
     timestamp: Optional[float] = None
     last_update: Optional[datetime] = None
 

@@ -30,6 +30,31 @@ class SocketIOManager:
         
         return app_with_socketio
     
+    async def emit_motor1_status(self, data: dict):
+        if self.sio:
+            logger.info(f"🚀 Emitting motor1_status: {data['position']}")
+            message = WSMessage(
+                event="motor1_status",
+                data=data
+            )
+            await self.sio.emit("motor1_status", json.loads(message.json()))
+    
+    async def emit_motor2_status(self, data: dict):
+        if self.sio:
+            message = WSMessage(
+                event="motor2_status",
+                data=data
+            )
+            await self.sio.emit("motor2_status", json.loads(message.json()))
+    
+    async def emit_temperature_status(self, data: dict):
+        if self.sio:
+            message = WSMessage(
+                event="temperature_status",
+                data=data
+            )
+            await self.sio.emit("temperature_status", json.loads(message.json()))
+    
     async def emit_motor_status(self, data: dict):
         if self.sio:
             message = WSMessage(
