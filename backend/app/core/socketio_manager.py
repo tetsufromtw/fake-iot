@@ -2,7 +2,8 @@ import logging
 from typing import Optional
 import socketio
 import json
-from app.schemas.websocket import WSMessage
+import time
+from app.schemas.websocket import WSMessage, WSMotor1Status, WSMotor2Status, WSTemperatureStatus, WSMotorStatus
 
 logger = logging.getLogger(__name__)
 
@@ -32,34 +33,42 @@ class SocketIOManager:
     
     async def emit_motor1_status(self, data: dict):
         if self.sio:
+            _ = WSMotor1Status(**data)
             logger.info(f"🚀 Emitting motor1_status: {data['position']}")
             message = WSMessage(
                 event="motor1_status",
-                data=data
+                data=data,
+                timestamp=time.time()
             )
             await self.sio.emit("motor1_status", json.loads(message.json()))
     
     async def emit_motor2_status(self, data: dict):
         if self.sio:
+            _ = WSMotor2Status(**data)
             message = WSMessage(
                 event="motor2_status",
-                data=data
+                data=data,
+                timestamp=time.time()
             )
             await self.sio.emit("motor2_status", json.loads(message.json()))
     
     async def emit_temperature_status(self, data: dict):
         if self.sio:
+            _ = WSTemperatureStatus(**data)
             message = WSMessage(
                 event="temperature_status",
-                data=data
+                data=data,
+                timestamp=time.time()
             )
             await self.sio.emit("temperature_status", json.loads(message.json()))
     
     async def emit_motor_status(self, data: dict):
         if self.sio:
+            _ = WSMotorStatus(**data)
             message = WSMessage(
                 event="motor_status",
-                data=data
+                data=data,
+                timestamp=time.time()
             )
             await self.sio.emit("motor_status", json.loads(message.json()))
     

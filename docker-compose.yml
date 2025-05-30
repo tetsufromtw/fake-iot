@@ -66,14 +66,13 @@ services:
     volumes:
       - ./frontend:/app
       - /app/node_modules
-      - /app/.next
-    depends_on:
-      - backend
+    command: npm run dev
     environment:
       - WATCHPACK_POLLING=true
     networks:
       - iot-network
     restart: unless-stopped
+
 
   mqtt-explorer:
     image: smeagolworms4/mqtt-explorer

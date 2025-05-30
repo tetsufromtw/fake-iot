@@ -1,4 +1,5 @@
 .
+├── Dockerfile
 ├── README.md
 ├── eslint.config.mjs
 ├── next-env.d.ts
@@ -12,6 +13,7 @@
 │   ├── globe.svg
 │   ├── models
 │   │   ├── motor.fbx
+│   │   ├── motor2.fbx
 │   │   ├── scene.bin
 │   │   ├── scene.gltf
 │   │   └── textures
@@ -68,6 +70,8 @@
 │   │   │   │   └── index.tsx
 │   │   │   └── Scene
 │   │   └── ui
+│   │       ├── Card
+│   │       │   └── index.tsx
 │   │       └── Slider.tsx
 │   ├── config
 │   │   ├── environment.ts
@@ -97,8 +101,9 @@
 │   └── types
 │       ├── api.ts
 │       ├── motor.ts
-│       └── three.ts
+│       ├── three.ts
+│       └── websocket.ts
 ├── tree.txt
 └── tsconfig.json
 
-42 directories, 60 files
+43 directories, 64 files

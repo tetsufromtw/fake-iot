@@ -24,13 +24,19 @@ export interface WSTemperatureStatus {
   last_update: string
 }
 
-export interface WSMessage {
-  event: string
-  data: any
-  timestamp?: number
-}
-
 export interface WSConnectionStatus {
   status: 'connected' | 'disconnected' | 'error'
   message?: string
+}
+
+export interface WSMessage<T> {
+  event: string
+  data: T
+  timestamp?: number
+}
+
+export interface WSMessageRaw {
+  event: string
+  data: any
+  timestamp?: number
 }

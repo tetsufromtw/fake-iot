@@ -1,7 +1,13 @@
 import { useEffect, useRef } from 'react'
 import { io, Socket } from 'socket.io-client'
 import { useMotorStore } from '@/store/motorStore'
-import { WSMotorStatus, WSMotor1Status, WSMotor2Status, WSTemperatureStatus } from '@/types/websocket'
+import {
+  WSMotor1Status,
+  WSMotor2Status,
+  WSTemperatureStatus,
+  WSMotorStatus,
+  WSMessage
+} from '@/types/websocket'
 
 export const useWebSocket = () => {
   const socketRef = useRef<Socket | null>(null)
@@ -28,7 +34,7 @@ export const useWebSocket = () => {
       console.log('WebSocket connected')
     })
 
-    socketRef.current.on('motor_status', (message: { data: WSMotorStatus }) => {
+    socketRef.current.on('motor_status', (message: WSMessage<WSMotorStatus>) => {
       updateMotorData({
         angle: message.data.angle,
         rpm: message.data.rpm,
@@ -37,17 +43,18 @@ export const useWebSocket = () => {
       })
     })
 
-    socketRef.current.on('motor1_status', (message: { data: WSMotor1Status }) => {
+    socketRef.current.on('motor1_status', (message: WSMessage<WSMotor1Status>) => {
       console.log('Motor1 data received:', message.data)
-      setMotor1Pos(message.data.position)
+      //setMotor1Pos(message.data.position!)
+      setMotor1Pos(message.data.position as any)
     })
 
-    socketRef.current.on('motor2_status', (message: { data: WSMotor2Status }) => {
+    socketRef.current.on('motor2_status', (message: WSMessage<WSMotor2Status>) => {
       console.log('Motor2 data received:', message.data)
       setMotor2Pos(message.data.position)
     })
 
-    socketRef.current.on('temperature_status', (message: { data: WSTemperatureStatus }) => {
+    socketRef.current.on('temperature_status', (message: WSMessage<WSTemperatureStatus>) => {
       console.log('Temperature data received:', message.data)
       setTempValue(message.data.value)
     })

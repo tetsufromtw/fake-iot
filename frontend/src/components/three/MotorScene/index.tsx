@@ -40,8 +40,10 @@ export default function MotorScene() {
         <Lighting />
           <ambientLight intensity={0.6} />
   <directionalLight position={[-5, 5, -5]} intensity={1} />
-        <GLTFMotor />
-        <FBXMotor />
+        {/* <GLTFMotor /> */}
+<FBXMotor position={[-2, 3, 0]} motorId={1} />
+<FBXMotor position={[2, 3, 0]} motorId={2} />
+
         <GridFloor />
         <Environment preset="city" />
       </Suspense>
